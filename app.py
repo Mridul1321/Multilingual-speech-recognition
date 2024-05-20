@@ -282,6 +282,7 @@ Answer:
         {"role": "user",
         "content": base_prompt}
     ]
+    # print(dialogue_template)
     tokenizer=st.session_state.tokenizer
     prompt = tokenizer.apply_chat_template(conversation=dialogue_template,
                                           tokenize=False,
@@ -294,7 +295,7 @@ def retriever_score(query):
     query_embedding = embedding_model.encode(query, convert_to_tensor=True)
     dot_scores = util.dot_score(a=query_embedding, b=embeddings)[0]
     print(len(embeddings))
-    if len(embeddings)<4:
+    if len(embeddings)<=4:
         k=1
     else :
         k=4
@@ -348,8 +349,8 @@ def main():
             st.session_state['messages']=[]
         response = rag_answers(user_input)
         st.session_state['messages'].append({"role": "bot", "content": response})
-
-    for message in st.session_state['messages']:
+    
+    for message in st.session_state['messages'][::-1]: 
         if message["role"] == "user":
             st.write(f"You: {message['content']}")
         else:
